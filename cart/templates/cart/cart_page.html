@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow-sm mt-4">
+  <div class="card-body">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="text-success mb-0">🛒 Your Cart</h2>
+      <a href="/products/" class="btn btn-outline-success btn-sm">Continue Shopping</a>
+    </div>
+
+    {% if items %}
+    <div class="table-responsive">
+      <table class="table table-bordered align-middle">
+        <thead class="table-success text-center">
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          {% for item in items %}
+          <tr>
+
+            <!-- Product Image + Name -->
+            <td>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="{{ item.product.image.url }}" 
+                         alt="{{ item.product.name }}" 
+                         width="60" height="60" 
+                         style="object-fit: cover; border-radius: 10px;">
+                    <strong>{{ item.product.name }}</strong>
+                </div>
+            </td>
+
+            <!-- Quantity Column -->
+            <td class="text-center">
+              <form method="POST" action="{% url 'update_quantity' item.id %}" 
+                    class="d-flex justify-content-center align-items-center gap-2">
+                {% csrf_token %}
+                <button type="submit" name="action" value="decrease" 
+                        class="btn btn-sm btn-outline-danger">−</button>
+                <span class="px-2">{{ item.quantity }}</span>
+                <button type="submit" name="action" value="increase" 
+                        class="btn btn-sm btn-outline-success">+</button>
+              </form>
+            </td>
+
+            <!-- Price -->
+            <td class="text-end">₹{{ item.product.price|floatformat:2 }}</td>
+
+            <!-- Subtotal -->
+            <td class="text-end">₹{{ item.subtotal|floatformat:2 }}</td>
+
+            <!-- Remove button -->
+            <td class="text-center">
+              <a href="{% url 'remove_item' item.id %}" class="btn btn-sm btn-danger">
+                Remove
+              </a>
+            </td>
+
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-end mt-3">
+      <h4 class="text-success">Grand Total: ₹{{ grand_total|floatformat:2 }}</h4>
+      <a href="{% url 'checkout_page' %}" class="btn btn-success mt-2">Proceed to Checkout</a>
+    </div>
+
+    {% else %}
+      <div class="alert alert-warning text-center">Your cart is empty.</div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock %}

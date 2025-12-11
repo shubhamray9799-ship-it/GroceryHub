@@ -1,0 +1,92 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">📦 All Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+
+                <!-- Order Header -->
+                <h4>Order #{{ order.id }}</h4>
+                <p><strong>Customer:</strong> {{ order.user.username }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+                <p><strong>Status:</strong> {{ order.status }}</p>
+                <p><strong>Date:</strong> {{ order.created_at }}</p>
+
+                <!-- Order Action Buttons -->
+                <div class="mt-3">
+                    <!-- Approve Order -->
+                    <a href="{% url 'approve_order' order.id %}" 
+                        class="btn btn-success btn-sm">
+                            ✔ Approve Order
+                    </a>
+                    <!-- Track Order -->
+                    <a href="{% url 'track_order' order.id %}" 
+                        class="btn btn-primary btn-sm">
+                            📍 Track Order
+                    </a>
+                    <!-- Reject Order -->
+                    <a href="{% url 'reject_order' order.id %}" 
+                        class="btn btn-danger btn-sm">
+                            ❌ Reject Order
+                    </a>
+                </div>
+
+
+                <hr>
+
+                <!-- Items Table -->
+                <h5 class="mb-3">Items:</h5>
+                <table class="table table-bordered table-striped">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 40%">Product</th>
+                            <th style="width: 20%">Qty</th>
+                            <th style="width: 20%">Price</th>
+                            <th style="width: 20%">Subtotal</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for item in order.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>₹{{ item.price }}</td>
+                            <td>₹{{ item.subtotal }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <form method="post" action="{% url 'update_order_status' order.id %}">
+                    {% csrf_token %}
+                    <div class="input-group mt-3 mb-2">
+                        <select name="status" class="form-select">
+                            <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Processing" {% if order.status == "Processing" %}selected{% endif %}>Processing</option>
+                            <option value="Out for Delivery" {% if order.status == "Out for Delivery" %}selected{% endif %}>Out for Delivery</option>
+                            <option value="Delivered" {% if order.status == "Delivered" %}selected{% endif %}>Delivered</option>
+                            <option value="Rejected" {% if order.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                        </select>
+
+                        <button class="btn btn-primary" type="submit">Update Status</button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+        {% endfor %}
+
+    {% else %}
+        <h4 class="text-center text-muted">No orders found.</h4>
+    {% endif %}
+</div>
+
+{% endblock %}

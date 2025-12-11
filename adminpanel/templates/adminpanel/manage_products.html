@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - GroceryHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-gray-900 to-gray-700 min-h-screen">
+
+<div class="p-4 w-full">
+
+    <h1 class="text-4xl font-extrabold text-white mb-6 text-center drop-shadow-lg">📦 Manage Products</h1>
+
+    <div class="flex justify-between items-center mb-6 px-2">
+        <a href="{% url 'admin_dashboard' %}" 
+           class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-lg shadow-md transition">
+           ⬅ Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2">
+        {% for product in products %}
+        <div class="relative bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden p-4 flex flex-col items-center transform transition-transform hover:scale-105 hover:shadow-2xl">
+
+            <!-- Category Ribbon -->
+            <div class="w-full bg-green-500 text-white py-1 text-center font-bold text-sm rounded-t-3xl">
+                {{ product.category }}
+            </div>
+
+            <!-- Product Image -->
+            <div class="relative w-full h-40 mb-4 rounded-b-3xl overflow-hidden">
+                <img src="{{ product.image.url }}" class="h-full w-full object-cover transition-transform duration-500 hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+            </div>
+
+            <!-- Product Info -->
+            <h2 class="text-white font-bold text-lg text-center mb-1">{{ product.name }}</h2>
+            <p class="text-green-300 font-semibold mb-2 text-center">₹{{ product.price }}</p>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-2">
+                <a href="{% url 'edit_product' product.id %}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-md transition-transform hover:scale-105 text-sm">
+                   Edit
+                </a>
+                <a href="{% url 'delete_product' product.id %}" 
+                   onclick="return confirm('Are you sure you want to delete this product?');"
+                   class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md transition-transform hover:scale-105 text-sm">
+                   Delete
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="col-span-full text-center py-6 text-white/70 font-semibold">
+            No Products Found
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+</body>
+</html>

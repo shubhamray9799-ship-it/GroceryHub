@@ -1,0 +1,58 @@
+{% extends "adminpanel/admin_base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2>📍 Tracking Order #{{ order.id }}</h2>
+
+    <div class="card mt-3 p-4 shadow-sm">
+
+        <h5><strong>Status: </strong>
+            <span class="badge bg-info text-dark">{{ order.status }}</span>
+        </h5>
+
+        <hr>
+
+        <h4 class="mb-3">Order Timeline</h4>
+
+        <ul class="timeline">
+            <li class="{% if order.status == 'Pending' or order.status == 'Processing' or order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+                🕒 Pending
+            </li>
+            <li class="{% if order.status == 'Processing' or order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+                ⚙ Processing
+            </li>
+            <li class="{% if order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+                🚚 Out for Delivery
+            </li>
+            <li class="{% if order.status == 'Delivered' %}active{% endif %}">
+                📦 Delivered
+            </li>
+            <li class="{% if order.status == 'Rejected' %}active rejected{% endif %}">
+                ❌ Rejected
+            </li>
+        </ul>
+
+    </div>
+</div>
+
+<style>
+.timeline {
+    list-style: none;
+    padding-left: 0;
+}
+.timeline li {
+    padding: 10px 0;
+    font-size: 18px;
+    opacity: 0.3;
+}
+.timeline li.active {
+    font-weight: bold;
+    color: green;
+    opacity: 1;
+}
+.timeline li.rejected {
+    color: red !important;
+}
+</style>
+
+{% endblock %}

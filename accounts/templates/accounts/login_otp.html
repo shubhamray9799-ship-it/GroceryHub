@@ -1,0 +1,41 @@
+{% comment %}
+ <h1>OTP Login Page</h1>
+<form method="POST">
+    {% csrf_token %}
+    <input type="tel" name="phone" placeholder="Enter your phone number" required>
+    <button type="submit">Send OTP</button>
+</form> 
+{% endcomment %}
+
+
+{% comment %} <form method="POST" action="{% url 'login_otp' %}">
+    {% csrf_token %}
+    <input type="tel" name="phone" placeholder="Enter your phone number" value="{{ phone }}" required>
+    <input type="text" name="otp" placeholder="Enter OTP">
+    <button type="submit">Generate / Verify OTP</button>
+</form>
+
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+
+{% if request.session.otp %}
+<p style="color:green;">[TESTING] Your OTP is: {{ request.session.otp }}</p>
+{% endif %} {% endcomment %}
+
+
+
+<form method="POST" action="{% url 'login_otp' %}">
+    {% csrf_token %}
+    <input type="tel" name="phone" placeholder="Enter your phone number" value="{{ phone }}" required>
+    <input type="text" name="otp" placeholder="Enter OTP" value="{{ otp }}">
+    <button type="submit">Generate / Verify OTP</button>
+</form>
+
+{% for message in messages %}
+<p>{{ message }}</p>
+{% endfor %}
+
+{% if otp %}
+<p style="color:green;">[TESTING] Your OTP is: {{ otp }}</p>
+{% endif %}

@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GroceryHub - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script> 
+</head>
+<body class="bg-gray-800 min-h-screen flex items-center justify-center">
+
+    <!-- Register Card -->
+    <div class="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full">
+        <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Create Your Account</h2>
+        
+        {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <p class="text-red-600 font-semibold">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Registration Options -->
+        <div class="flex justify-center mb-4">
+            <button id="tab-password" class="px-4 py-2 bg-purple-600 text-white rounded-l-lg font-semibold">Password</button>
+            <button id="tab-otp" class="px-4 py-2 bg-purple-200 text-purple-700 rounded-r-lg font-semibold">OTP</button>
+        </div>
+
+        <!-- Password Registration Form -->
+        <div>
+            <form id="form-password" method="POST" action="{% url 'register' %}" class="space-y-4">
+                {% csrf_token %}
+                <div>
+                    <label for="name" class="block text-gray-700 font-semibold mb-1">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div>
+                    <label for="phone" class="block text-gray-700 font-semibold mb-1">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Enter your 10-digit phone number"
+                           pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div>
+                    <label for="email" class="block text-gray-700 font-semibold mb-1">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-gray-700 font-semibold mb-1">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div>
+                    <label for="confirm_password" class="block text-gray-700 font-semibold mb-1">Confirm Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter your password"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition duration-300">
+                    Register
+                </button>
+            </form>
+
+            <!-- OTP Registration Form -->
+            <form id="form-otp" method="POST" action="{% url 'register' %}" class="space-y-4 hidden">
+                {% csrf_token %}
+                <div>
+                    <label for="name-otp" class="block text-gray-700 font-semibold mb-1">Full Name</label>
+                    <input type="text" id="name-otp" name="name" placeholder="Enter your full name"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div class="relative">
+                    <label for="phone-otp" class="block text-gray-700 font-semibold mb-1">Phone Number</label>
+                    <input type="tel" id="phone-otp" name="phone" placeholder="Enter your 10-digit phone number"
+                           pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                    <button type="button" id="send-otp" 
+                            class="absolute right-0 top-0 mt-2 mr-2 bg-purple-600 text-white px-3 py-1 rounded-lg hover:bg-purple-700 transition duration-300">
+                        Send OTP
+                    </button>
+                </div>
+
+                <div id="otp-section" class="hidden">
+                    <label for="otp" class="block text-gray-700 font-semibold mb-1 mt-2">Enter OTP</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter OTP"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <div>
+                    <label for="email-otp" class="block text-gray-700 font-semibold mb-1">Email</label>
+                    <input type="email" id="email-otp" name="email" placeholder="Enter your email"
+                           class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition duration-300">
+                    Register via OTP
+                </button>
+            </form>
+        </div>
+        <p class="text-center text-gray-600 mt-4">
+            Already have an account?
+            <a href="{% url 'login' %}" class="text-purple-600 font-semibold hover:underline">
+                Login
+            </a>
+        </p>
+    </div>
+
+<script>
+// Tab toggle
+const tabPassword = document.getElementById('tab-password');
+const tabOtp = document.getElementById('tab-otp');
+const formPassword = document.getElementById('form-password');
+const formOtp = document.getElementById('form-otp');
+
+tabPassword.addEventListener('click', () => {
+    formPassword.classList.remove('hidden');
+    formOtp.classList.add('hidden');
+    tabPassword.classList.add('bg-purple-600', 'text-white');
+    tabPassword.classList.remove('bg-purple-200', 'text-purple-700');
+    tabOtp.classList.add('bg-purple-200', 'text-purple-700');
+    tabOtp.classList.remove('bg-purple-600', 'text-white');
+});
+
+tabOtp.addEventListener('click', () => {
+    formOtp.classList.remove('hidden');
+    formPassword.classList.add('hidden');
+    tabOtp.classList.add('bg-purple-600', 'text-white');
+    tabOtp.classList.remove('bg-purple-200', 'text-purple-700');
+    tabPassword.classList.add('bg-purple-200', 'text-purple-700');
+    tabPassword.classList.remove('bg-purple-600', 'text-white');
+});
+
+// Show OTP input after clicking Send OTP
+document.getElementById('send-otp').addEventListener('click', function() {
+    document.getElementById('otp-section').classList.remove('hidden');
+    alert('OTP sent to your phone number!');
+});
+</script>
+
+</body>
+</html>
+ 

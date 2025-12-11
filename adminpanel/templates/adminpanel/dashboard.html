@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GroceryHub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-50 via-yellow to-green-600 min-h-screen flex">
+
+<div class="mt-6 p-6 w-full">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-10">
+        <h2 class="text-4xl font-bold">Welcome Back, Admin 👋</h2>
+        <div class="flex gap-4">
+            <a href="#" class="bg-white shadow px-5 py-3 rounded-lg hover:bg-gray-200 transition font-semibold">
+                🔔 Notifications
+            </a>
+            <a href="#" id="profile-btn" class="bg-green-600 text-white px-5 py-3 rounded-lg hover:bg-green-700 transition font-semibold">
+                👤 View Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- OVERVIEW CARDS -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div class="bg-gradient-to-br from-green-500 to-green-700 text-white shadow-lg p-6 rounded-2xl">
+            <h3 class="text-xl font-semibold mb-2">Total Products</h3>
+            <p class="text-5xl font-bold">120</p>
+        </div>
+        <div class="bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg p-6 rounded-2xl">
+            <h3 class="text-xl font-semibold mb-2">New Orders</h3>
+            <p class="text-5xl font-bold">32</p>
+        </div>
+        <div class="bg-gradient-to-br from-yellow-500 to-yellow-700 text-white shadow-lg p-6 rounded-2xl">
+            <h3 class="text-xl font-semibold mb-2">Users</h3>
+            <p class="text-5xl font-bold">45</p>
+        </div>
+        <div class="bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-lg p-6 rounded-2xl">
+            <h3 class="text-xl font-semibold mb-2">Today’s Sales</h3>
+            <p class="text-5xl font-bold">₹8,450</p>
+        </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <h3 class="text-3xl font-bold mt-14 mb-6">Quick Actions</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <a href="#" data-add-product class="bg-green-600 text-white py-10 px-12 rounded-2xl shadow-xl text-center text-3xl font-semibold hover:scale-105 hover:bg-green-700 transition-all">
+            ➕ Add Product
+        </a>
+        <a href="{% url 'manage_products' %}" class="bg-blue-600 text-white py-10 px-12 rounded-2xl shadow-xl text-center text-3xl font-semibold hover:scale-105 hover:bg-blue-700 transition-all">
+            📦 Manage Products
+        </a>
+
+        <a href="{% url 'admin_orders' %}"
+            class="bg-indigo-600 text-white py-10 px-12 rounded-2xl shadow-xl 
+                text-center text-3xl font-semibold hover:scale-105 
+                hover:bg-indigo-700 transition-all">
+            🧾 View Orders
+        </a>
+
+
+
+        <a href="#" class="bg-purple-600 text-white py-10 px-12 rounded-2xl shadow-xl text-center text-3xl font-semibold hover:scale-105 hover:bg-purple-700 transition-all">
+            📊 Sales Report
+        </a>
+        <a href="#" class="bg-red-600 text-white py-10 px-12 rounded-2xl shadow-xl text-center text-3xl font-semibold hover:scale-105 hover:bg-red-700 transition-all">
+            🛍 Categories
+        </a>
+        <a href="#" class="bg-gray-700 text-white py-10 px-12 rounded-2xl shadow-xl text-center text-3xl font-semibold hover:scale-105 hover:bg-gray-800 transition-all">
+            ⚙️ Settings
+        </a>
+    </div>
+
+    <!-- ADD PRODUCT PANEL -->
+    <div id="add-product-panel" class="fixed top-0 right-0 h-full w-0 bg-white/90 backdrop-blur-md shadow-2xl overflow-hidden transition-all duration-500 z-50">
+        <div class="p-8 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-green-900">Add New Product</h2>
+                <button id="close-add-product" class="text-red-600 font-bold text-2xl">&times;</button>
+            </div>
+            <form method="POST" enctype="multipart/form-data" class="flex-1 flex flex-col gap-4">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Product Name" class="border p-3 rounded-xl shadow-md" required>
+                <input type="number" name="price" placeholder="Price" class="border p-3 rounded-xl shadow-md" required>
+                <input type="text" name="category" placeholder="Category" class="border p-3 rounded-xl shadow-md" required>
+                <input type="file" name="image" class="border p-3 rounded-xl shadow-md" required>
+                <textarea name="description" placeholder="Description" class="border p-3 rounded-xl shadow-md h-32" required></textarea>
+                <button type="submit" class="bg-green-700 text-white py-3 rounded-xl font-bold hover:bg-green-800 hover:scale-[1.02] transition shadow-lg mt-4">Save Product</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PROFILE PANEL -->
+    <div id="profile-panel" class="fixed top-0 right-0 h-full w-0 bg-white/90 backdrop-blur-md shadow-2xl overflow-hidden transition-all duration-500 z-50">
+        <div class="p-8 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-green-900">Admin Profile</h2>
+            <button id="close-profile" class="text-red-600 font-bold text-2xl">&times;</button>
+            </div>
+            <div class="flex flex-col items-center gap-4">
+
+                <img src="{% static 'default-profile.png' %}" 
+                    alt="Profile Picture" 
+                    class="h-32 w-32 object-cover rounded-full border-4 border-green-600">
+
+
+                <p class="text-lg font-semibold">Name: {{ request.user.first_name }}</p>
+                <p class="text-gray-700">Email: {{ request.user.email }}</p>
+                <button id="open-edit-profile" class="bg-green-600 text-white py-2 px-6 rounded-xl hover:bg-green-700 transition">
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE EDIT PROFILE PANEL -->
+    <div id="edit-profile-panel" class="fixed top-0 right-0 h-full w-0 bg-white/90 shadow-2xl overflow-hidden transition-all duration-500 z-50">
+        <div class="p-8 h-full flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-green-900">Edit Profile</h2>
+                <button id="close-edit-profile" class="text-red-600 font-bold text-2xl">&times;</button>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" action="#">
+                {% csrf_token %}
+                <input type="text" name="first_name" value="{{ request.user.first_name }}"
+                    class="border p-3 w-full rounded mb-4">
+                <input type="email" name="email" value="{{ request.user.email }}"
+                    class="border p-3 w-full rounded mb-4">
+                <input type="file" name="profile_image"
+                    class="border p-3 w-full rounded mb-4">
+
+                <button class="bg-green-700 text-white py-2 px-6 rounded-xl w-full hover:bg-green-800">
+                    Save Changes
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <h3 class="text-3xl font-bold mt-14 mb-4">Recent Orders</h3>
+    <div class="bg-white shadow-lg rounded-xl p-6">
+        <table class="w-full text-left">
+            <thead>
+                <tr class="border-b text-gray-700">
+                    <th class="py-3">Order ID</th>
+                    <th class="py-3">Customer</th>
+                    <th class="py-3">Amount</th>
+                    <th class="py-3">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="border-b">
+                    <td class="py-3 font-semibold">#ORD101</td>
+                    <td>Rahul Kumar</td>
+                    <td>₹450</td>
+                    <td><span class="bg-green-200 text-green-800 px-3 py-1 rounded-full">Delivered</span></td>
+                </tr>
+                <tr class="border-b">
+                    <td class="py-3 font-semibold">#ORD102</td>
+                    <td>Priya Sharma</td>
+                    <td>₹820</td>
+                    <td><span class="bg-yellow-200 text-yellow-800 px-3 py-1 rounded-full">Pending</span></td>
+                </tr>
+                <tr class="border-b">
+                    <td class="py-3 font-semibold">#ORD103</td>
+                    <td>Amit Verma</td>
+                    <td>₹310</td>
+                    <td><span class="bg-blue-200 text-blue-800 px-3 py-1 rounded-full">Processing</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // ADD PRODUCT PANEL TOGGLE
+    const addProductBtn = document.querySelector("[data-add-product]");
+    const addProductPanel = document.getElementById("add-product-panel");
+    const closeAddProduct = document.getElementById("close-add-product");
+
+    addProductBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (addProductPanel.style.width === "400px") {
+            addProductPanel.style.width = "0";
+        } else {
+            addProductPanel.style.width = "400px";
+        }
+    });
+
+    closeAddProduct.addEventListener("click", function () {
+        addProductPanel.style.width = "0";
+    });
+</script>
+
+</body>
+</html>
